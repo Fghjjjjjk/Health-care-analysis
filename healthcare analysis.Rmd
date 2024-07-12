@@ -1,0 +1,107 @@
+---
+title: "healthcare analysis"
+author: "Ankit Kumar"
+date: "2024-07-12"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+
+```{r}
+diabeticdata = read.csv(file.choose())
+print(diabeticdata)
+```
+
+```{r}
+
+# Example: Applying PCA for dimensionality reduction
+# Assuming you have numeric features ready for PCA
+numeric_features <- diabeticdata[, sapply(diabeticdata, is.numeric)]
+scaled_features <- scale(numeric_features)  # Standardize features
+pca_result <- prcomp(scaled_features, center = TRUE, scale. = TRUE)
+pca_data <- as.data.frame(pca_result$x[, 1:2])  # Select first two principal components
+colnames(pca_data) <- c("PC1", "PC2")
+diabeticdata <- cbind(diabeticdata, pca_data)
+
+
+library(dplyr)
+library(rpart)
+library(rpart.plot)
+
+set.seed(123)  # Set seed for reproducibility
+train_index <- sample(1:nrow(diabeticdata), 0.8*nrow(diabeticdata))
+train_data <- diabeticdata[train_index, ]
+test_data <- diabeticdata[-train_index, ]
+
+
+# Build a decision tree model
+model <- rpart(Outcome ~ ., data = train_data, method = "class")
+
+# Plot the decision tree
+rpart.plot(model, box.palette = c("red", "blue"), shadow.col = "gray", nn = TRUE)
+
+# Make predictions on the test set
+predictions <- predict(model, newdata = test_data, type = "class")
+```
+
+```{r}
+# Evaluate the model
+confusion_matrix <- table(test_data$Outcome, predictions)
+accuracy <- sum(diag(confusion_matrix)) / sum(confusion_matrix)
+precision <- confusion_matrix[2, 2] / sum(confusion_matrix[, 2])
+recall <- confusion_matrix[2, 2] / sum(confusion_matrix[2, ])
+f1_score <- 2 * precision * recall / (precision + recall)
+
+# Display evaluation metrics
+cat("Accuracy:", accuracy, "\n")
+cat("Precision:", precision, "\n")
+cat("Recall:", recall, "\n")
+cat("F1 Score:", f1_score, "\n")
+```
+```{r}
+#Accuracy: The model achieves an accuracy of approximately 86.36%. This indicates that overall, the model correctly predicts whether a patient has diabetes or not in about 86% of cases. This is a good accuracy score, suggesting that the model is effective in making correct predictions.
+
+#Precision: Precision is 0.7719298, which means that when the model predicts that a patient has diabetes, it is correct about 77.19% of the time. This indicates a relatively low rate of false positives, which is important in healthcare applications where misdiagnosis can have significant consequences.
+
+#Recall: Recall (or sensitivity) is 0.8461538, indicating that the model correctly identifies approximately 84.62% of all actual diabetes cases in the dataset. This is a good measure, suggesting that the model is effective in capturing most of the positive cases.
+
+#F1 Score: The F1 score is 0.8073394, which is the harmonic mean of precision and recall. It provides a balance between precision and recall, giving a single metric to evaluate the model's overall performance. An F1 score of around 0.81 is considered quite good and suggests that the model is robust in its ability to predict both positive and negative cases.
+
+#Interpretation:
+#The high accuracy, precision, recall, and F1 score indicate that your decision tree model performs well in predicting diabetes based on the engineered features and other variables in your dataset.
+#The precision and recall values suggest that the model strikes a good balance between minimizing false positives and false negatives, which is crucial in medical diagnostics.
+#These metrics indicate that the feature engineering steps you performed, along with the decision tree model, have effectively captured important patterns and relationships in the data related to diabetes prediction.
+
+```
+
+```{r}
+write.csv(diabeticdata)
+#Model deployment
+
+# Save the trained model
+saveRDS(model, file = "diabeticdata.rds")
+
+# Load the model for future predictions
+loaded_model <- readRDS("diabeticdata.rds")
+
+
+
+# Example of making predictions with new data
+new_data <- data.frame( )  # Replace ... with your new data
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,27 @@
+# Diabetes Prediction Project
+
+This project focuses on predicting diabetes using machine learning techniques applied to a dataset containing patient information. The dataset includes features such as glucose levels, BMI, age, and other health metrics.
+
+## Project Overview
+
+The main objectives of this project are:
+- Preprocessing the dataset to handle missing values and encode categorical variables.
+- Performing feature engineering to create new features that potentially enhance model performance.
+- Building a decision tree classifier to predict diabetes based on patient data.
+- Evaluating the model's performance using metrics such as accuracy, precision, recall, and F1 score.
+- Visualizing the decision tree structure to interpret key predictors influencing diabetes prediction.
+
+## Project Structure
+
+- **data/**: Contains the dataset used for training and testing the model.
+- **notebooks/**: Jupyter notebooks or R Markdown files detailing data exploration, preprocessing, modeling, and evaluation steps.
+- **scripts/**: Scripts for data preprocessing, model training, and evaluation.
+- **models/**: Saved model files (e.g., .rds files for R) after training.
+- **README.md**: Overview of the project, instructions for setup, usage, and interpretation of results.
+
+## Setup and Usage
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/Fghjjjjjjk/diabetes-prediction.git
+   cd diabetes-prediction
